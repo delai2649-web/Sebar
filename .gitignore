@@ -1,0 +1,28 @@
+# Session files
+*.session
+*.session-journal
+userbots/*.session
+userbots/*.session-journal
+
+# Database
+*.db
+*.db-journal
+
+# Logs
+logs/*.log
+
+# Environment
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+
+# Downloads
+downloads/*
+!downloads/.gitkeep
