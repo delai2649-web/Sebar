@@ -4,57 +4,118 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    # API Credentials
+    # Telegram API
     API_ID = int(os.getenv("API_ID"))
     API_HASH = os.getenv("API_HASH")
-    BOT_TOKEN = os.getenv("BOT_TOKEN")
+    BOT_TOKEN = os.getenv("BOT_TOKEN")  # Bot utama
     
     # Admin
-    OWNER_ID = int(os.getenv("OWNER_ID", "0"))
+    OWNER_ID = int(os.getenv("OWNER_ID"))
     ADMIN_IDS = [int(x) for x in os.getenv("ADMIN_IDS", "").split(",") if x]
     
     # Database
-    DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///auto_sebar.db")
+    DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///sebar.db")
     
     # Paths
-    SESSION_NAME = "userbot_session/main"
-    DOWNLOADS_DIR = "downloads/"
-    LOGS_DIR = "logs/"
+    USERBOT_DIR = "userbots/"
     
-    # Broadcast Settings
-    DEFAULT_DELAY = 30  # detik
-    DEFAULT_PACKAGE = "BASIC"
+    # Payment
+    QRIS_API_KEY = os.getenv("QRIS_API_KEY")  # Untuk QRIS otomatis
+    QRIS_STATIC = os.getenv("QRIS_STATIC")     # QRIS statis (backup)
     
-    # Package Limits
+    # Harga Paket
     PACKAGES = {
-        "FREE": {"max_groups": 5, "delay": 120, "days": 1, "price": 0},
-        "BASIC": {"max_groups": 50, "delay": 60, "days": 7, "price": 20000},
-        "STANDARD": {"max_groups": 150, "delay": 30, "days": 30, "price": 50000},
-        "PRO": {"max_groups": 500, "delay": 10, "days": 30, "price": 100000},
-        "ENTERPRISE": {"max_groups": 9999, "delay": 5, "days": 365, "price": 500000}
-    }
-    
-    # Auto Features
-    AUTO_JOIN_GROUPS = True
-    AUTO_LEAVE_BANNED = True
-    CAPTCHA_SOLVER = False
-    
-    # Payment (contoh)
-    PAYMENT_CHANNELS = {
-        "dana": os.getenv("DANA_NUMBER"),
-        "gopay": os.getenv("GOPAY_NUMBER"),
-        "ovo": os.getenv("OVO_NUMBER")
+        "basic_hemat": {
+            "name": "Basic Hemat (Non-Garansi)",
+            "price": 5000,
+            "duration_days": 30,
+            "garansi": False,
+            "token_backup": False,
+            "fitur": ["Auto Promosi", "Atur Grup", "Jeda", "Timer", "PM Permit", "Base Reply"]
+        },
+        "basic_sultan": {
+            "name": "Basic Sultan (Bergaransi)",
+            "price": 7000,
+            "duration_days": 30,
+            "garansi": True,
+            "token_backup": True,
+            "fitur": ["Auto Promosi", "Atur Grup", "Jeda", "Timer", "PM Permit", "Base Reply", "Extra Fitur"]
+        },
+        "wtb_basic": {
+            "name": "WTB Basic",
+            "price": 5000,
+            "duration_days": 30,
+            "garansi": False,
+            "token_backup": False,
+            "fitur": ["Base Reply/Auto Reply"]
+        },
+        "wtb_spesial": {
+            "name": "WTB Spesial",
+            "price": 10000,
+            "duration_days": 30,
+            "garansi": True,
+            "token_backup": True,
+            "fitur": ["Base Reply/Auto Reply", "Forward Support"]
+        }
     }
 
 class Messages:
     WELCOME = """
 👋 <b>Halo, {name}!</b>
 
-🚀 Anda selangkah lebih dekat menuju <b>Era Baru Promosi!</b> di @JasebXBot
+🚀 Selamat datang di <b>Userbot Sebar & WTB</b>
 
-Lupakan cara lama yang membuang waktu & tenaga. Bersama saya, promosi ke puluhan/ratusan grup ada dalam genggaman Anda, siap menerima pesan promosi secara <b>otomatis, terjadwal, dan tanpa batas.</b>
+Lupakan cara lama yang membuang waktu & tenaga. Bersama kami, promosi ke puluhan/ratusan grup ada dalam genggaman Anda.
 
-⭐ <b>Klik menu di bawah untuk memulai revolusi promosi Anda!</b>
+⭐ <b>Klik menu di bawah untuk memulai!</b>
+"""
+    
+    NEED_SUBSCRIPTION = """
+🔔 <b>Diperlukan Langganan</b> 🔔
+
+🚀 Anda harus berlangganan untuk dapat membuat userbot.
+
+📝 Pilih salah satu tombol di bawah ini untuk melanjutkan proses pembelian.
+"""
+    
+    CREATE_USERBOT = """
+🚀 <b>Buat Userbot</b>
+
+Silakan bagikan nomor telepon Anda untuk membuat userbot.
+
+📱 Format: <code>+628xxxxxxxxxx</code>
+
+🔒 Nomor Anda aman dan terenkripsi.
+"""
+    
+    OTP_SENT = """
+⏳ <b>Sedang mengirim kode otentikasi...</b>
+
+🔑 <b>Silakan Periksa Kode OTP Dari Akun Resmi Telegram.</b>
+
+🔔 Kirim Code Dengan Format: <code>1 2 3 4 5</code> (Spasi)
+
+📝 Ketik <code>/cancel</code> Untuk Membatalkan.
+"""
+    
+    ENTER_2FA = """
+🔐 <b>Akun Anda Dilindungi 2FA</b>
+
+Silakan Masukkan Kata Sandi Anda.
+"""
+    
+    USERBOT_CREATED = """
+🎉 <b>Userbot Berhasil Diaktifkan!</b>
+
+👤 <b>Nama:</b> {name}
+🆔 <b>ID:</b> <code>{user_id}</b>
+
+🔑 <b>Token Garansi Anda:</b>
+<code>{token}</code>
+
+⚠️ <b>HARAP SIMPAN TOKEN INI BAIK-BAIK!</b>
+
+Ketik /start untuk melihat menu promosi.
 
 🔔 <b>Ads:</b> <a href='https://t.me/NokosID_UBot'>Beli Akun OLD Untuk UBOT? Otomatis DI Sini AJA @NokosID_UBot!!!</a>
 """
@@ -68,31 +129,7 @@ Lupakan cara lama yang membuang waktu & tenaga. Bersama saya, promosi ke puluhan
 ┃ 🆔 <b>ID Userbot:</b> <code>{user_id}</code>
 ┃ 💎 <b>Paket:</b> {package}
 ┃ 📅 <b>Kedaluwarsa:</b> {expiry}
-┃ 📊 <b>Total Grup:</b> {total_groups}/{max_groups}
 ┗━━━━━━━━━━━━━━━━━━━━━┛
 
 🔔 <b>Ads:</b> <a href='https://t.me/NokosID_UBot'>Beli Akun OLD Untuk UBOT? Otomatis DI Sini AJA @NokosID_UBot!!!</a>
-"""
-    
-    GROUP_MENU = """
-🎯 <b>Pengaturan Target Grup:</b>
-
-📊 <b>Statistik Grup:</b>
-• Total Grup: {total_groups}
-• Aktif: {active_groups}
-• Diblokir: {banned_groups}
-• Pending: {pending_groups}
-"""
-    
-    STORE_MENU = """
-🛍️ <b>MENU STORE & LAYANAN</b>
-
-Silakan pilih kategori produk yang ingin Anda akses di bawah ini:
-
-💎 <b>Paket Tersedia:</b>
-• FREE - Rp 0 (1 hari, 5 grup)
-• BASIC - Rp 20.000 (7 hari, 50 grup)
-• STANDARD - Rp 50.000 (30 hari, 150 grup)
-• PRO - Rp 100.000 (30 hari, 500 grup)
-• ENTERPRISE - Rp 500.000 (365 hari, unlimited)
 """
